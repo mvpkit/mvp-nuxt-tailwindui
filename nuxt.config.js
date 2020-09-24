@@ -7,6 +7,10 @@ export default {
     port: 3012
   },
 
+  env: {
+    PROXY_API_URL: process.env.PROXY_API_URL
+  },
+
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
     title: 'mvp-vue',
@@ -26,6 +30,12 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
+    '@/plugins/clientInit.js',
+    '@/plugins/dayjs.js',
+    '@/plugins/mixins.js',
+    '@/plugins/portal.js',
+    '@/plugins/axios.js',
+    "@/plugins/directives.js",
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -47,9 +57,16 @@ export default {
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {},
+  axios: {
+    baseURL: process.env.PROXY_API_URL,
+    credentials: false
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
+  },
+
+  router: {
+    middleware: ['login']
   }
 }

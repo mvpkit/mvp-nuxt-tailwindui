@@ -3,7 +3,7 @@
     <div>
       <Logo />
       <h1 class="title">
-        mvp-vue
+        mvp-admin
       </h1>
       <div class="links">
         <a
