@@ -213,7 +213,7 @@
               <div class="py-1 rounded-md bg-white shadow-xs" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
                 <a href="#" class="block px-4 py-2 text-sm text-cool-gray-700 hover:bg-cool-gray-100 transition ease-in-out duration-150" role="menuitem">Your Profile</a>
                 <a href="#" class="block px-4 py-2 text-sm text-cool-gray-700 hover:bg-cool-gray-100 transition ease-in-out duration-150" role="menuitem">Settings</a>
-                <a @click="logout" class="block px-4 py-2 text-sm text-cool-gray-700 hover:bg-cool-gray-100 transition ease-in-out duration-150" role="menuitem">Logout</a>
+                <a href="#" @click="handleLogout" class="block px-4 py-2 text-sm text-cool-gray-700 hover:bg-cool-gray-100 transition ease-in-out duration-150" role="menuitem">Logout</a>
               </div>
             </div>
           </div>
@@ -229,25 +229,19 @@
 </template>
 
 <script>
+import { reactive } from '@vue/composition-api'
+import useUser from '../hooks/useUser';
 export default {
-  name: 'default',
-  data () {
-    return {
+
+  setup(){
+    const { logout } = useUser();
+    const data = reactive({
       show: {
         profileMenu: false
-      }
-    }
-  },
-  methods: {
-    logout() {
-      console.log('logout')
-      return this.$store.dispatch('auth/logout').then(() => {
-        location.replace('/')
-      })
-    },
-  },
-  computed: {
-
+      },
+      handleLogout: logout
+    })
+    return data;
   }
 }
 </script>

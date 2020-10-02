@@ -24,7 +24,7 @@
           </a>
         </p>
       </div>
-      <form @submit.prevent="handleLogin()" class="mt-8" action="#" method="POST">
+      <form @submit.prevent="login()" class="mt-8" action="#" method="POST">
         <input type="hidden" name="remember" value="true" />
         <div class="rounded-md shadow-sm">
           <div>
@@ -81,7 +81,7 @@
             type="submit"
             class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
             :disabled="isLoggingIn"
-            :class="[ isLoggingIn ? 'bg-indigo-200': 'bg-indigo-600']"
+            :class="[ isLoggingIn ? 'bg-indigo-500': 'bg-indigo-600']"
           >
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <svg
@@ -136,34 +136,42 @@
 </template>
 
 <script>
-import { reactive, watch } from '@vue/composition-api'
-import useUser from '../hooks/useUser';
-import { getCookie } from "~/lib/cookie-helpers";
 export default {
   layout: 'blank',
-  setup(){
-
-    const { data: user, login, logout, loading: isLoggingIn, error, status } = useUser();
-
-    function handleLogin(email, password){
-      login(email, password);
-    }
-
-    const data = reactive({
+  data() {
+    return {
       user: {
-        email: 'test@test.com',
-        password: 'asdfasdf'
+        email: '',
+        password: '',
       },
-      isLoggingIn,
+      isLoggingIn: false,
       errors: [],
-      handleLogin
-    });
+    }
+  },
+  methods: {
+    login() {
+      this.isLoggingIn = true
+      this.errors = []
+      return this.$store
+        .dispatch('auth/login', this.user)
+        .then((res) => {
+          console.log('return on /login: ', res.user)
+          if (res.user.id) {
+            this.$router.push('/')
+          }
+        })
+        .catch((err) => {
+          if(err.response.data.statusCode == 400){
+            this.errors = err.response.data.message
+          }else{
+            this.errors = ["Invalid login, please try again"];
+          }
 
-    return data;
-
-  }
+          this.isLoggingIn = false
+        })
+    },
+  },
 }
-
 </script>
 
 <style></style>

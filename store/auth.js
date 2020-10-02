@@ -34,8 +34,6 @@ export const actions = {
   login({ commit }, { email, password }) {
     return this.$axios.post('/auth/login', {email, password})
       .then(res => {
-
-        console.log('geetting dick', res);
         const {accessToken} = res.data
         const user = res.data
         delete user.accessToken
